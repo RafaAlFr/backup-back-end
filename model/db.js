@@ -164,6 +164,34 @@ const Autores = sequelize.define('Autores', {
       presenca: { type: DataTypes.BOOLEAN, allowNull: false },
       curso: { type: DataTypes.STRING, allowNull: false }
 });
+const GrandeAreas = sequelize.define('GrandeAreas', {
+  nome: { type: DataTypes.STRING, allowNull: true },
+  descricao: { type: DataTypes.STRING, allowNull: true }
+});
+
+const Areas = sequelize.define('Areas', {
+  idGrandeAreas: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: GrandeAreas,
+      key: 'id'
+    }
+  },
+  nome: { type: DataTypes.STRING, allowNull: true },
+  descricao: { type: DataTypes.STRING, allowNull: true }
+});
+
+const SubAreas = sequelize.define('SubAreas', {
+  idAreas: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Areas,
+      key: 'id'
+    }
+  },
+  nome: { type: DataTypes.STRING, allowNull: true },
+  descricao: { type: DataTypes.STRING, allowNull: true }
+});
 
 const Avaliadores = sequelize.define('Avaliadores', {
   idUserProfiles: {
@@ -180,11 +208,18 @@ const Avaliadores = sequelize.define('Avaliadores', {
       key: 'id'
     }
   },
+  idSubAreas: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: SubAreas,
+      key: 'id'
+    }
+  },
   linkLattes: { type: DataTypes.STRING, allowNull: false },
   status: { type: DataTypes.STRING, allowNull: false }
 });
 
-const Comissoes = sequelize.define('Comissoes', {
+const Organizadores = sequelize.define('Organizadores', {
   idInstituicao: {
     type: DataTypes.INTEGER,
     references: {
@@ -208,39 +243,36 @@ const Comissoes = sequelize.define('Comissoes', {
   },
   linkLattes: { type: DataTypes.STRING, allowNull: false },
   periodo: { type: DataTypes.STRING, allowNull: false },
-  status: { type: DataTypes.STRING, allowNull: false },
-  organizador: { type: DataTypes.BOOLEAN, allowNull: false },
-  chair: { type: DataTypes.BOOLEAN, allowNull: false }
+  status: { type: DataTypes.STRING, allowNull: false }
 });
 
-const GrandeAreas = sequelize.define('GrandeAreas', {
-  nome: { type: DataTypes.STRING, allowNull: false },
-  descricao: { type: DataTypes.STRING, allowNull: false }
-});
-
-const Areas = sequelize.define('Areas', {
-  idGrandeAreas: {
+const Chairs = sequelize.define('Chairs', {
+  idInstituicao: {
     type: DataTypes.INTEGER,
     references: {
-      model: GrandeAreas,
+      model: Instituicoes,
       key: 'id'
     }
   },
-  nome: { type: DataTypes.STRING, allowNull: false },
-  descricao: { type: DataTypes.STRING, allowNull: false }
-});
-
-const subAreas = sequelize.define('subAreas', {
-  idAreas: {
+  idUserProfiles: {
     type: DataTypes.INTEGER,
     references: {
-      model: Areas,
+      model: UserProfile,
       key: 'id'
     }
   },
-  nome: { type: DataTypes.STRING, allowNull: false },
-  descricao: { type: DataTypes.STRING, allowNull: false }
+  idEventos: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Eventos,
+      key: 'id'
+    }
+  },
+  linkLattes: { type: DataTypes.STRING, allowNull: false },
+  periodo: { type: DataTypes.STRING, allowNull: false },
+  status: { type: DataTypes.STRING, allowNull: false }
 });
+
 
 const AvaliadorSubAreas = sequelize.define('AvaliadorSubAreas', {
   idAvaliadores: {
@@ -253,7 +285,7 @@ const AvaliadorSubAreas = sequelize.define('AvaliadorSubAreas', {
   idSubAreas: {
     type: DataTypes.INTEGER,
     references: {
-      model: subAreas,
+      model: SubAreas,
       key: 'id'
     }
   }
@@ -263,7 +295,7 @@ const Especialidades = sequelize.define('Especialidades', {
   idSubAreas: {
     type: DataTypes.INTEGER,
     references: {
-      model: subAreas,
+      model: SubAreas,
       key: 'id'
     }
   },
@@ -374,4 +406,4 @@ Cargo.belongsToMany(UserProfile, { through: UserCargo, foreignKey: 'idCargo' });
 sequelize.sync();
 
 // Não esqueçam
-module.exports = { UserProfile, Cargo, Token, UserCargo, Instituicoes, EditorChefes, Eventos, Ouvintes, Areas, subAreas, GrandeAreas, AvaliadorSubAreas, Especialidades, CorpoEditoriais, CorpoEditorialEventos, Apoiadores, EventApoiadores, Onlines, Presenciais, CategoriaArquivos, Arquivos, Convidados, Autores, Comissoes, Avaliadores, sequelize };
+module.exports = { UserProfile, Cargo, Token, UserCargo, Instituicoes, EditorChefes, Eventos, Ouvintes, Areas, SubAreas, GrandeAreas, AvaliadorSubAreas, Especialidades, CorpoEditoriais, CorpoEditorialEventos, Apoiadores, EventApoiadores, Onlines, Presenciais, CategoriaArquivos, Arquivos, Convidados, Autores, Chairs, Avaliadores, Organizadores, sequelize };
